@@ -96,3 +96,10 @@ public class WsppLastL {
         }
     }
 }
+
+/**
+ * __current-repo/java-solutions/WsppLastL.java:5: error: duplicate class: IntList
+ * class IntList {
+ * ^
+ * 1 error
+ */
