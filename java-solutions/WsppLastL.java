@@ -2,25 +2,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-class IntList {
-	int[] list;
-	IntList(int[] list) {
-		this.list = new int[0];
-	}
-	void add(int x) {
-		this.list = Arrays.copyOf(this.list, this.list.length + 1);
-		this.list[this.list.length - 1] = x;
-	}
-	void set(int position, int x) {
-		this.list[position] = x;
-	}
-	int get(int position) {
-		return this.list[position];
-	}
-	int length() {
-		return this.list.length;
-	}
-}
 
 public class WsppLastL {
     public static void main(String[] args) {
@@ -47,12 +28,11 @@ public class WsppLastL {
                         if (word.length > 0) {
                             String str = new String(word);
                             if (words.containsKey(str)) {
+								words.get(str).set(1, words.get(str).get(1) + 1);
 								if (count != words.get(str).get(0)) {									
 									words.get(str).set(0, count);
-									words.get(str).set(1, words.get(str).get(1) + 1);
 									words.get(str).add(position);
 								} else {
-									words.get(str).set(1, words.get(str).get(1) + 1);
 									words.get(str).set(words.get(str).length() - 1, position);
 								}
                             } else {
@@ -96,10 +76,3 @@ public class WsppLastL {
         }
     }
 }
-
-/**
- * __current-repo/java-solutions/WsppLastL.java:5: error: duplicate class: IntList
- * class IntList {
- * ^
- * 1 error
- */
