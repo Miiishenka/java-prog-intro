@@ -5,10 +5,10 @@ import java.util.*;
 
 public class WsppLastL {
     public static void main(String[] args) {
-        Map<String, IntList> words = new LinkedHashMap<String, IntList>();
+        Map<String, IntList> words = new LinkedHashMap<String, IntList>(); // :NOTE: use last occurence?
 		int count = 1;
         try {
-            try (Reader reader = new BufferedReader(new InputStreamReader(
+            try (Reader reader = new BufferedReader(new InputStreamReader( // :NOTE: use your scanner
                 new FileInputStream(args[0]),
                 StandardCharsets.UTF_8
             ))) {
@@ -27,7 +27,7 @@ public class WsppLastL {
                     } else {
                         if (word.length > 0) {
                             String str = new String(word);
-                            if (words.containsKey(str)) {
+                            if (words.containsKey(str)) { // :NOTE: a lot of map methpod call
 								words.get(str).set(1, words.get(str).get(1) + 1);
 								if (count != words.get(str).get(0)) {									
 									words.get(str).set(0, count);
