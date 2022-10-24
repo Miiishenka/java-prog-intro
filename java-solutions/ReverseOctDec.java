@@ -1,6 +1,6 @@
 import java.util.Arrays;
 import java.io.*;
-public class Reverse {
+public class ReverseOctDec {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		String[][] matrix = new String[1][];
@@ -26,6 +26,9 @@ public class Reverse {
 			if (k == arr.length) {
 					arr = Arrays.copyOf(arr, k * 2 + 1);
 				}
+			if (number.length() >= 1 && (number.charAt(number.length() - 1) == 'O' || number.charAt(number.length() - 1) == 'o')) {
+				number = Integer.toString(Integer.parseUnsignedInt(number.substring(0, number.length() - 1), 8));
+			}
 			arr[k++] = number;			
 		}
 		scanner.close();
