@@ -18,17 +18,19 @@ public class WsppLastL {
 				position = 1;
 			}
 			if (str.length() > 0) {
-				if (words.containsKey(str)) { // NOTE обращение
-					words.get(str).set(1, words.get(str).get(1) + 1);
-					if (countStr != words.get(str).get(0)) {									
-						words.get(str).set(0, countStr);
-						words.get(str).add(position);
-					} else {
-						words.get(str).set(words.get(str).size - 1, position);
-					}
-				} else {
+				IntList value = words.get(str);
+				if (value == null) {
 					words.put(str, new IntList(new int[]{countStr, 1, position}));
-				}    
+				} else {
+					value.set(1, value.get(1) + 1);
+					if (countStr != words.get(str).get(0)) {									
+						value.set(0, countStr);
+						value.add(position);
+					} else {
+						value.set(value.size - 1, position);
+					}
+					words.put(str, value); 
+				}					
 				position++;	
 			}				
         } 
