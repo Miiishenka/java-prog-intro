@@ -26,7 +26,7 @@ public class ReverseOctDec {
 			if (k == arr.length) {
 					arr = Arrays.copyOf(arr, k * 2 + 1);
 				}
-			if (number.length() >= 1 && (number.charAt(number.length() - 1) == 'O' || number.charAt(number.length() - 1) == 'o')) {
+			if (number.length() >= 1 && Character.toLowerCase(number.charAt(number.length() - 1)) == 'o') {
 				number = Integer.toString(Integer.parseUnsignedInt(number.substring(0, number.length() - 1), 8));
 			}
 			arr[k++] = number;			
