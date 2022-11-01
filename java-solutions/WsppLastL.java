@@ -55,8 +55,6 @@ public class WsppLastL {
 }
 
 /**
- * Testing LastL
- *     Running test 13: java WsppLastL "test13.in" "test13.out"
  * Exception in thread "main" java.lang.AssertionError: Line 8:
  *      expected `question 1 10`,
  *        actual `question 1 1`
