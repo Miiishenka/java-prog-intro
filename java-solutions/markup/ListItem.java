@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListItem {
-    private List<ListItemElement> list = new ArrayList<>();
+    private List<ListItemElement> list;
+
     public ListItem(List<ListItemElement> list) {
         this.list = list;
     }
+
     void toHtml(StringBuilder s) {
         s.append("<li>");
-        for (ListItemElement element : this.list) {
+        for (ListItemElement element : list) {
             element.toHtml(s);
         }
         s.append("</li>");
