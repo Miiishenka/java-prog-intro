@@ -38,8 +38,8 @@ class Scanner {
 		token.setLength(0);
 		while (this.hasNext()) {
 			for (int i = index + 1; i < buffer.length; i++) {
-				if (buffer[i] == '\n' || Character.isWhitespace(buffer[i]) || buffer[i] == '\0') {
-					if (buffer[i] == '\n') {
+				if (buffer[i] == '\n' || Character.isWhitespace(buffer[i]) || buffer[i] == '\0' || buffer[i] == '\r') {
+					if (buffer[i] == '\n' || buffer[i] == '\r') {
 						count++;
 					}
 					if (token.length() >= 1) {
