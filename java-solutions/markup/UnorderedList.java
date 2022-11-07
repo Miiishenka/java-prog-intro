@@ -3,19 +3,14 @@ package markup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnorderedList implements ListItemElement {
-    private List<ListItem> list = new ArrayList<>();
+public class UnorderedList extends AbstractElement implements ListItemElement {
     public UnorderedList(List<ListItem> list) {
-        this.list = list;
+        super(list);
     }
-    public void toMarkdown(StringBuilder s) {
-        throw new UnsupportedOperationException();
+    public String getTeg() {
+        return "ul";
     }
-    public void toHtml(StringBuilder s) {
-        s.append("<ul>");
-        for (ListItem element : this.list) {
-            element.toHtml(s);
-        }
-        s.append("</ul>");
+    public String getMark() {
+        return "";
     }
 }

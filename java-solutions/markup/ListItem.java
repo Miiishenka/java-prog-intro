@@ -3,18 +3,14 @@ package markup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListItem {
-    private List<ListItemElement> list;
-
+public class ListItem extends AbstractElement implements Elements {
     public ListItem(List<ListItemElement> list) {
-        this.list = list;
+        super(list);
     }
-
-    void toHtml(StringBuilder s) {
-        s.append("<li>");
-        for (ListItemElement element : list) {
-            element.toHtml(s);
-        }
-        s.append("</li>");
+    public String getTeg() {
+        return "li";
+    }
+    public String getMark() {
+        return "";
     }
 }

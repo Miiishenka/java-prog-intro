@@ -3,22 +3,15 @@ package markup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderedList implements ListItemElement {
-    private List<ListItem> list;
-
+public class OrderedList extends AbstractElement implements ListItemElement {
     public OrderedList(List<ListItem> list) {
-        this.list = list;
+        super(list);
+    }
+    public String getTeg() {
+        return "ol";
+    }
+    public String getMark() {
+        return "";
     }
 
-    public void toMarkdown(StringBuilder s) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void toHtml(StringBuilder s) {
-        s.append("<ol>");
-        for (ListItem element : this.list) {
-            element.toHtml(s);
-        }
-        s.append("</ol>");
-    }
 }

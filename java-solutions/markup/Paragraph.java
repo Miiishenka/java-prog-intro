@@ -3,22 +3,14 @@ package markup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paragraph implements ListItemElement {
-    private List<ParagraphElement> list;
-
+public class Paragraph extends AbstractElement implements ListItemElement {
     public Paragraph(List<ParagraphElement> list) {
-        this.list = list;
+        super(list);
     }
-
-    public void toMarkdown(StringBuilder s) {
-        for (ParagraphElement element : this.list) {
-            element.toMarkdown(s);
-        }
+    public String getTeg() {
+        return "";
     }
-
-    public void toHtml(StringBuilder s) {
-        for (ParagraphElement element : this.list) {
-            element.toHtml(s);
-        }
+    public String getMark() {
+        return "";
     }
 }
