@@ -63,7 +63,7 @@ public class TicTacToeBoard implements Board, Position {
         return GameResult.UNKNOWN;
     }
 
-    private boolean checkWin(int col, int row) {
+    private boolean checkWin(int col, int row) { // :NOTE: убратть копипасту
         int mainDiagonal = 1;
         int secondaryDiagonal = 1;
         int line = 1;
