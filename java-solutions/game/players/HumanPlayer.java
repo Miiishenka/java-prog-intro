@@ -1,6 +1,7 @@
 package game.players;
 
 import game.*;
+import game.board.TicTacToeBoard;
 
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public Move makeMove(Position position) {
+    public Move makeMove(Position position) { // :NOTE: ни у кого не должен быть доступ к доске
         System.out.println();
         System.out.println("Current position");
         System.out.println(position);
