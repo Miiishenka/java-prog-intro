@@ -22,7 +22,7 @@ public class Main {
             obstacles[i] = new int[]{i - m, 2 * m - i - 1};
             i++;
         }
-        Player[] players = new Player[100];
+        Player[] players = new Player[5];
         Arrays.fill(players, new RandomPlayer(m, n));
 //        players[0] = new HumanPlayer(new Scanner(System.in));
 
