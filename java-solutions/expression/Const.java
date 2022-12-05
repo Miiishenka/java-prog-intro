@@ -2,7 +2,7 @@ package expression;
 
 public class Const implements Operand {
     protected final Number cnst;
-    protected final int hashCode;
+    protected final Number hashCode;
     public Const(int cnst) {
         this.cnst = cnst;
         this.hashCode = cnst;
@@ -10,7 +10,7 @@ public class Const implements Operand {
 
     public Const(double cnst) {
         this.cnst = cnst;
-        this.hashCode = (int) cnst % Integer.MAX_VALUE;
+        this.hashCode = (int) Math.round(cnst + (cnst % 1) * Math.pow(10, 10)) % Integer.MAX_VALUE;
     }
     @Override
     public int evaluate(int x) {
@@ -33,7 +33,7 @@ public class Const implements Operand {
     }
     @Override
     public int hashCode() {
-        return this.hashCode;
+        return (int) this.hashCode;
     }
     @Override
     public boolean equals(Object obj) {
