@@ -1,7 +1,4 @@
-package game.players;
-
-import game.*;
-import game.board.TicTacToeBoard;
+package game;
 
 import java.util.Scanner;
 
@@ -13,7 +10,7 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public Move makeMove(Position position) { // :NOTE: ни у кого не должен быть доступ к доске
+    public Move makeMove(Position position) {
         System.out.println();
         System.out.println("Current position");
         System.out.println(position);
@@ -28,7 +25,7 @@ public class HumanPlayer implements Player {
                 }
                 System.out.println("Your move is invalid. Enter new move");
             }
-            catch (NumberFormatException e) {
+            catch (Exception e) {
                 System.out.println("This is not a move. Enter new move");
             }
         } while (true);

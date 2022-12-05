@@ -1,7 +1,4 @@
-package game.board;
-
-import game.players.*;
-import game.TwoPlayerGame;
+package game;
 
 import java.util.Arrays;
 import java.util.Scanner;

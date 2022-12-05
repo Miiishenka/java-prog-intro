@@ -1,6 +1,4 @@
-package game.players;
-
-import game.*;
+package game;
 
 public class SequentialPlayer implements Player {
     private final int n;

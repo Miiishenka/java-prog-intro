@@ -1,6 +1,5 @@
-package game.players;
+package game;
 
-import game.*;
 
 public interface Player {
     Move makeMove(Position position);

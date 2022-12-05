@@ -1,7 +1,5 @@
 package game;
 
-import game.players.*;
-
 public class TwoPlayerGame {
     private final Board board;
     private final Player player1;
@@ -38,7 +36,7 @@ public class TwoPlayerGame {
             System.out.println();
             System.out.println("Player: " + no);
             System.out.println(move);
-            System.out.println(board);
+            System.out.println(position);
             System.out.println("Result: " + result);
         }
         switch (result) {
