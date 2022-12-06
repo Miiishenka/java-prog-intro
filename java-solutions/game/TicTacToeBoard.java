@@ -4,18 +4,13 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class TicTacToeBoard implements Board {
-    private static final Map<Cell, String> CELL_TO_STRING = Map.of(
-            Cell.E, ".",
-            Cell.X, "X",
-            Cell.O, "0"
-    );
     private final int m;
     private final int n;
     private final int k;
     private int count;
     private final int[][] obstacles;
 
-    private final Cell[][] field;
+    private final Cell[][] field; // :NOTE: здесь и хранить перенпятсивя
     private Cell turn;
 
     public TicTacToeBoard(int n, int m, int k, int[][] obstacles) {
@@ -64,7 +59,7 @@ public class TicTacToeBoard implements Board {
         return GameResult.UNKNOWN;
     }
 
-    private boolean checkWin(int col, int row, int dx, int dy) {
+    private boolean checkWin(int col, int row, int dx, int dy) { // :NOTE: копипаста
         int maxLine = 1;
         for (int j = -1; j < 2; j += 2) {
             for (int i = 1; i <= k; i++) {
