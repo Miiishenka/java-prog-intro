@@ -66,22 +66,15 @@ public class TicTacToeBoard implements Board {
 
     private boolean checkWin(int col, int row, int dx, int dy) {
         int maxLine = 1;
-        for (int i = 1; i <= k; i++) {
-            if (col + i * dy >= 0 && col + i * dy < m
-                    && row + i * dx >= 0 && row + i * dx < n
-                    && field[row + i * dx][col + i * dy] == turn) {
-                maxLine++;
-            } else {
-                break;
-            }
-        }
-        for (int i = 1; i <= k; i++) {
-            if (col - i * dy >= 0 && col - i * dy < m
-                    && row - i * dx >= 0 && row - i * dx < n
-                    && field[row - i * dx][col - i * dy] == turn) {
-                maxLine++;
-            } else {
-                break;
+        for (int j = -1; j < 2; j += 2) {
+            for (int i = 1; i <= k; i++) {
+                if (col + i * dy * j >= 0 && col + i * dy * j < m
+                        && row + i * dx * j >= 0 && row + i * dx * j < n
+                        && field[row + i * dx * j][col + i * dy * j] == turn) {
+                    maxLine++;
+                } else {
+                    break;
+                }
             }
         }
         return maxLine >= k;

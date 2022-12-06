@@ -80,26 +80,24 @@ public class Tournament {
                 }
             }
         }
-        StringBuilder sb = new StringBuilder("  ");
+        System.out.println("Table:");
+        System.out.print("  ");
         for (int i = 1; i <= players.length; i++) {
-            sb.append(i).append(" ");
+            System.out.print(i + " ");
         }
-        sb.append("Points");
-        sb.append('\n');
+        System.out.println("Points");
         for (int i = 0; i < table.length; i++) {
-            sb.append(i + 1).append(" ");
+            System.out.print(i + 1 + " ");
             int sum = 0;
             for (int j = 0; j < table.length; j++) {
                 if (table[i][j] == -1) {
-                    sb.append("X ");
+                    System.out.print("X ");
                 } else {
-                    sb.append(table[i][j]).append(" ");
+                    System.out.print(table[i][j] + " ");
                     sum += table[i][j];
                 }
             }
-            sb.append(sum).append('\n');
+            System.out.println(sum);
         }
-        System.out.println("Table:");
-        System.out.println(sb);
     }
 }

@@ -56,6 +56,11 @@ public class TicTacPosition implements Position {
             sb.append(System.lineSeparator());
         }
         sb.setLength(sb.length() - System.lineSeparator().length());
+
+        sb.append('\n').append("Obstacles are:").append('\n');
+        for (int[] obst: obstacles) {
+            sb.append(obst[0] + 1).append(" ").append(obst[1] + 1).append('\n');
+        }
         return sb.toString();
     }
 }
