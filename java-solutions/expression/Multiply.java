@@ -1,6 +1,6 @@
 package expression;
 
-public class Multiply extends Operation {
+public class Multiply extends BinaryOperation {
     public Multiply(Operand leftOperand, Operand rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -11,7 +11,7 @@ public class Multiply extends Operation {
     }
 
     @Override
-    int binaryEvaluate(int left, int right) {
+    public int binaryEvaluate(int left, int right) {
         return left * right;
     }
 

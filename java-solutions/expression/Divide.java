@@ -1,6 +1,6 @@
 package expression;
 
-public class Divide extends Operation {
+public class Divide extends BinaryOperation {
     public Divide(Operand leftOperand, Operand rightOperand) {
         super(leftOperand, rightOperand);
     }
@@ -10,7 +10,7 @@ public class Divide extends Operation {
     }
 
     @Override
-    int binaryEvaluate(int left, int right) {
+    public int binaryEvaluate(int left, int right) {
         return left / right;
     }
 

@@ -1,27 +1,27 @@
 package expression;
 
-public class Subtract extends BinaryOperation {
-    public Subtract(Operand leftOperand, Operand rightOperand) {
+public class Clear extends BinaryOperation {
+    public Clear(Operand leftOperand, Operand rightOperand) {
         super(leftOperand, rightOperand);
     }
 
     @Override
     String getTag() {
-        return "-";
+        return "clear";
     }
 
     @Override
-    public int binaryEvaluate(int left, int right) {
-        return left - right;
+    int binaryEvaluate(int left, int right) {
+        return left & ~(1 << right);
     }
 
     @Override
     double binaryEvaluate(double left, double right) {
-        return left - right;
+        return 0;
     }
 
     @Override
     public int getPriority() {
-        return -5;
+        return -7;
     }
 }

@@ -1,16 +1,18 @@
 package expression;
 
+import java.util.Objects;
+
 public class Const implements Operand {
     protected final Number cnst;
-    protected final Number hashCode;
+    protected final int hashCode;
     public Const(int cnst) {
         this.cnst = cnst;
-        this.hashCode = cnst;
+        this.hashCode = Objects.hash(cnst);
     }
 
     public Const(double cnst) {
         this.cnst = cnst;
-        this.hashCode = (int) Math.round(cnst + (cnst % 1) * Math.pow(10, 10)) % Integer.MAX_VALUE;
+        this.hashCode = Objects.hash(cnst);
     }
     @Override
     public int evaluate(int x) {
@@ -33,7 +35,7 @@ public class Const implements Operand {
     }
     @Override
     public int hashCode() {
-        return (int) this.hashCode;
+        return this.hashCode;
     }
     @Override
     public boolean equals(Object obj) {
