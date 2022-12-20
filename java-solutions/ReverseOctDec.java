@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.io.*;
 public class ReverseOctDec {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
@@ -29,7 +28,7 @@ public class ReverseOctDec {
 			if (number.length() >= 1 && Character.toLowerCase(number.charAt(number.length() - 1)) == 'o') {
 				number = Integer.toString(Integer.parseUnsignedInt(number.substring(0, number.length() - 1), 8));
 			}
-			arr[k++] = number;			
+			arr[k++] = number;
 		}
 		scanner.close();
 		for (int i = line - 1; i >= 0; i--) {
