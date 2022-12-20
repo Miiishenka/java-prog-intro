@@ -37,7 +37,7 @@ abstract public class UnaryOperation implements Operand {
         return operand.equals(operation);
     }
     public String toMiniString() {
-        if (abs(getPriority()) > 1) {
+        if (abs(operand.getPriority()) > 1) {
             return getTag() + "(" + operand.toMiniString() + ")";
         } else {
             return getTag() + " " + operand.toMiniString();
