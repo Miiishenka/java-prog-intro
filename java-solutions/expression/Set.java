@@ -11,7 +11,7 @@ public class Set extends BinaryOperation {
     }
 
     @Override
-    int binaryEvaluate(int left, int right) {
+    public int binaryEvaluate(int left, int right) {
         return left | (1 << right);
     }
 
