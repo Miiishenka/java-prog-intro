@@ -13,6 +13,22 @@ class Scanner {
 	Scanner(InputStream inputStream) {
 		this.reader = new BufferedReader(new InputStreamReader(inputStream));
 	}
+	Scanner(String file) {
+		try {
+			this.reader = new InputStreamReader(
+					new FileInputStream(file),
+					"UTF8"
+			);;
+		} catch (IOException e) {
+			System.out.println("Input file reading error: " + e.getMessage());
+		}
+
+		try {
+			read = reader.read(buffer);
+		} catch (IOException e) {
+			System.out.println("Input file reading error: " + e.getMessage());
+		}
+	}
 	String next() {
 		token.setLength(0);
 		while (this.hasNext()) {
