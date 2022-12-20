@@ -40,7 +40,7 @@ abstract public class UnaryOperation implements Operand {
         if (abs(getPriority()) > 1) {
             return getTag() + "(" + operand.toMiniString() + ")";
         } else {
-            return getTag() + operand.toMiniString();
+            return getTag() + " " + operand.toMiniString();
         }
     }
 }
