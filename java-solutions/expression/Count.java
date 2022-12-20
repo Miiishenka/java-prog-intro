@@ -17,7 +17,7 @@ public class Count extends UnaryOperation {
 
     @Override
     public int getPriority() {
-        return -5;
+        return 0;
     }
 
     @Override
