@@ -15,10 +15,10 @@ class Scanner {
 	}
 	Scanner(String file) {
 		try {
-			this.reader = new InputStreamReader(
+			this.reader = new BufferedReader(new InputStreamReader(
 					new FileInputStream(file),
 					"UTF8"
-			);;
+			));;
 		} catch (IOException e) {
 			System.out.println("Input file reading error: " + e.getMessage());
 		}
