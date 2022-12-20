@@ -11,7 +11,7 @@ abstract public class BinaryOperation implements Operand {
     protected BinaryOperation(Operand leftOperand, Operand rightOperand) {
         this.leftOperand = leftOperand;
         this.rightOperand = rightOperand;
-        this.hashCode = Objects.hash(leftOperand, getTag(), rightOperand);
+        this.hashCode = (Objects.hash(getTag()) * 101 + Objects.hash(leftOperand, rightOperand) * 239) % Integer.MAX_VALUE;
     }
     abstract String getTag();
     abstract int binaryEvaluate(int left, int right);
