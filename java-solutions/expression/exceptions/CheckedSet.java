@@ -9,9 +9,6 @@ public class CheckedSet extends Set {
     }
     @Override
     public int binaryEvaluate(int left, int right) {
-        if (right >= 32) {
-            throw new OverflowException();
-        }
         return left | (1 << right);
     }
 }

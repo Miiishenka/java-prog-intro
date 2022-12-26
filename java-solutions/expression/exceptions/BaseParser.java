@@ -1,5 +1,6 @@
 package expression.exceptions;
 
+
 public class BaseParser {
     private static final char END = '\0';
     private final CharSource source;
@@ -37,17 +38,18 @@ public class BaseParser {
         ch = source.hasPrev() ? source.prev() : END;
         return ch;
     }
-
-    protected void expect(final char expected) {
-        if (!take(expected)) {
-            throw error("Expected '" + expected + "', found '" + ch + "'");
+    protected void takePrev(int count) {
+        for (int i = 0; i < count; i++) {
+            takePrev();
         }
     }
 
-    protected void expect(final String value) {
-        for (final char c : value.toCharArray()) {
-            expect(c);
+    protected String buildToken() {
+        StringBuilder sb = new StringBuilder();
+        while (Character.isLetter(getCh()) || Character.isDigit(getCh())) {
+            sb.append(take());
         }
+        return sb.toString();
     }
 
     protected boolean eof() {

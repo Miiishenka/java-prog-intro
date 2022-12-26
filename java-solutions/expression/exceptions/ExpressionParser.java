@@ -42,12 +42,12 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
     }
     private Operand parseBinaryOperation(Operand firstOperand, int priority) throws ParseException {
         skipWhitespace();
-        char tag = firstOperand != null ? getTag(priority) : '\0';
+        String tag = firstOperand != null ? getTag(priority) : "";
         skipWhitespace();
         Operand operand = switch (priority) {
             case 4, 3 -> parseBinaryOperation(null, priority - 1);
             case 2 -> {
-                if (firstOperand == null || tag != '\0') {
+                if (firstOperand == null || !tag.isEmpty()) {
                     yield parseUnaryOperation();
                 } else {
                     yield null;
@@ -60,16 +60,16 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
         }
         if (operand != null) {
             return switch (tag) {
-                case 's' -> parseBinaryOperation(new CheckedSet(firstOperand, operand), priority);
-                case 'c' -> parseBinaryOperation(new CheckedClear(firstOperand, operand), priority);
-                case '+' -> parseBinaryOperation(new CheckedAdd(firstOperand, operand), priority);
-                case '-' -> parseBinaryOperation(new CheckedSubtract(firstOperand, operand), priority);
-                case '*' -> parseBinaryOperation(new CheckedMultiply(firstOperand, operand), priority);
-                case '/' -> parseBinaryOperation(new CheckedDivide(firstOperand, operand), priority);
+                case "set" -> parseBinaryOperation(new CheckedSet(firstOperand, operand), priority);
+                case "clear" -> parseBinaryOperation(new CheckedClear(firstOperand, operand), priority);
+                case "+" -> parseBinaryOperation(new CheckedAdd(firstOperand, operand), priority);
+                case "-" -> parseBinaryOperation(new CheckedSubtract(firstOperand, operand), priority);
+                case "*" -> parseBinaryOperation(new CheckedMultiply(firstOperand, operand), priority);
+                case "/" -> parseBinaryOperation(new CheckedDivide(firstOperand, operand), priority);
                 default -> throw new UnknownOperationException("Spaces in numbers");
             };
         }
-        if (tag != '\0') {
+        if (!tag.isEmpty()) {
             throw new InvalidExpressionException("No last argument");
         }
         if (priority == 4 && take(')')) {
@@ -78,34 +78,24 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
         return firstOperand;
     }
 
-    char getTag(int priority) {
+    String getTag(int priority) {
         return switch (priority) {
-            case 4 -> {
-                if (take('s')) {
-                    expect("et");
-                    yield 's'; // set
-                } else if (take('c')) {
-                    expect("lear");
-                    yield 'c'; // clear
-                } else {
-                    yield '\0';
-                }
-            }
+            case 4 -> buildToken();
             case 3 -> {
                 if (test('-') || test('+')) {
-                    yield take();
+                    yield Character.toString(take());
                 } else {
-                    yield '\0';
+                    yield "";
                 }
             }
             case 2 -> {
                 if (test('/') || test('*')) {
-                    yield take();
+                    yield Character.toString(take());
                 } else {
-                    yield '\0';
+                    yield "";
                 }
             }
-            default -> '\0';
+            default -> "";
         };
     }
     private Operand parseUnaryOperation() throws ParseException {
@@ -121,7 +111,6 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
             } catch (NumberFormatException e) {
                 throw new InvalidConstException("Invalid const, " + sb + " is not int");
             }
-
         }
         if (minus == '-') {
             Operand operand = parseUnaryOperation();
@@ -130,22 +119,45 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
             }
             return new CheckedNegate(operand);
         }
-        if (take('c')) {
-            if (take('o')) {
-                expect("unt");
-                return new CheckedCount(parseUnaryOperation());
-            }
-            takePrev();
-        }
-        if (test('x') || test('y') || test('z')) {
-            return new Variable(Character.toString(take()));
-        }
         if (take('(')) {
             bracketsCount++;
             return parseBinaryOperation(null, 4);
         }
         if (eof() || test(')')) {
             return null;
+        }
+        String tag = buildToken();
+        if (tag.equals("count")) {
+            Operand operand = parseUnaryOperation();
+            if (operand == null) {
+                throw new InvalidExpressionException("Bare count");
+            }
+            return new CheckedCount(operand);
+        }
+        if (tag.equals("pow10")) {
+            Operand operand = parseUnaryOperation();
+            if (operand == null) {
+                throw new InvalidExpressionException("Bare pow10");
+            }
+            return new CheckedPow10(operand);
+        }
+        if (tag.equals("log10")) {
+            Operand operand = parseUnaryOperation();
+            if (operand == null) {
+                throw new InvalidExpressionException("Bare log10");
+            }
+            return new CheckedLog10(operand);
+        }
+        if (tag.equals("x") || tag.equals("y") || tag.equals("z")) {
+            return new Variable(tag);
+        }
+        if (tag.equals("clear") || tag.equals("set")) {
+            try {
+                takePrev(tag.length());
+                return null;
+            } catch (StringIndexOutOfBoundsException e) {
+                throw new InvalidExpressionException("bare set/clear");
+            }
         }
         throw new UnknownOperationException("Invalid operation");
     }
