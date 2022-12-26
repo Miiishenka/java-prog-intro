@@ -25,12 +25,12 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
     }
     private Operand parseBinaryOperation(Operand rightOperand, int priority) {
         skipWhitespace();
-        char tag = rightOperand != null ? getTag(priority) : '\0';
+        String tag = rightOperand != null ? getTag(priority) : "";
         skipWhitespace();
         Operand leftOperand = switch (priority) {
             case 4, 3 -> parseBinaryOperation(null, priority - 1);
             case 2 -> {
-                if (rightOperand == null || tag != '\0') {
+                if (rightOperand == null || !tag.isEmpty()) {
                     yield parseUnaryOperation();
                 } else {
                     yield null;
@@ -43,62 +43,56 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
         } else {
             switch (priority) {
                 case 4 -> {
-                    return switch (tag) {
-                        case 's' -> parseBinaryOperation(new Set(rightOperand, leftOperand), 4);
-                        case 'c' -> parseBinaryOperation(new Clear(rightOperand, leftOperand), 4);
-                        default -> {
-                            take();
-                            yield rightOperand;
-                        }
-                    };
+                    if (tag.equals("set")) {
+                        return parseBinaryOperation(new Set(rightOperand, leftOperand), 4);
+                    }
+                    if (tag.equals("clear")) {
+                        return parseBinaryOperation(new Clear(rightOperand, leftOperand), 4);
+                    }
+                    take();
+                    return rightOperand;
                 }
                 case 3 -> {
-                    return switch (tag) {
-                        case '+' -> parseBinaryOperation(new Add(rightOperand, leftOperand), 3);
-                        case '-' -> parseBinaryOperation(new Subtract(rightOperand, leftOperand), 3);
-                        default -> rightOperand;
-                    };
+                    if (tag.equals("+")) {
+                        return parseBinaryOperation(new Add(rightOperand, leftOperand), 3);
+                    }
+                    if (tag.equals("-")) {
+                        return parseBinaryOperation(new Subtract(rightOperand, leftOperand), 3);
+                    }
+                    return rightOperand;
                 }
                 case 2 -> {
-                    return switch (tag) {
-                        case '*' -> parseBinaryOperation(new Multiply(rightOperand, leftOperand), 2);
-                        case '/' -> parseBinaryOperation(new Divide(rightOperand, leftOperand), 2);
-                        default -> rightOperand;
-                    };
+                    if (tag.equals("*")) {
+                        return parseBinaryOperation(new Multiply(rightOperand, leftOperand), 2);
+                    }
+                    if (tag.equals("/")) {
+                        return parseBinaryOperation(new Divide(rightOperand, leftOperand), 2);
+                    }
+                    return rightOperand;
                 }
             }
         }
         return null;
     }
 
-    char getTag(int priority) {
+    String getTag(int priority) {
         return switch (priority) {
-            case 4 -> {
-                if (take('s')) {
-                    expect("et");
-                    yield 's'; // set
-                } else if (take('c')) {
-                    expect("lear");
-                    yield 'c'; // clear
-                } else {
-                    yield '\0';
-                }
-            }
+            case 4 -> buildToken();
             case 3 -> {
                 if (test('-') || test('+')) {
-                    yield take();
+                    yield Character.toString(take());
                 } else {
-                    yield '\0';
+                    yield "";
                 }
             }
             case 2 -> {
                 if (test('/') || test('*')) {
-                    yield take();
+                    yield Character.toString(take());
                 } else {
-                    yield '\0';
+                    yield "";
                 }
             }
-            default -> '\0';
+            default -> "";
         };
     }
     private Operand parseUnaryOperation() {
@@ -114,19 +108,17 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
         if (minus == '-') {
             return new Negate(parseUnaryOperation());
         }
-        if (take('c')) {
-            if (take('o')) {
-                expect("unt");
-                return new Count(parseUnaryOperation());
-            }
-            takePrev();
-        }
-        if (test('x') || test('y') || test('z')) {
-            return new Variable(Character.toString(take()));
-        }
         if (take('(')) {
             return parseBinaryOperation(null, 4);
         }
+        String tag = buildToken();
+        if (tag.equals("count")) {
+            return new Count(parseUnaryOperation());
+        }
+        if (tag.equals("x") || tag.equals("y") || tag.equals("z")) {
+            return new Variable(tag);
+        }
+        takePrev(tag.length());
         return null;
     }
 }
