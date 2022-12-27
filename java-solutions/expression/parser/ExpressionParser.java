@@ -112,10 +112,10 @@ public final class ExpressionParser extends BaseParser implements TripleParser {
             return parseBinaryOperation(null, 4);
         }
         String tag = buildToken();
-        if (tag.equals("count")) {
+        if ("count".equals(tag)) {
             return new Count(parseUnaryOperation());
         }
-        if (tag.equals("x") || tag.equals("y") || tag.equals("z")) {
+        if ("x".equals(tag) || "y".equals(tag) || "z".equals(tag)) {
             return new Variable(tag);
         }
         takePrev(tag.length());
