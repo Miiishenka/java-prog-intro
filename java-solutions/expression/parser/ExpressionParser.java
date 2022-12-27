@@ -2,125 +2,123 @@ package expression.parser;
 
 import expression.*;
 
-public class ExpressionParser extends BaseParser implements TripleParser {
-
-    public CustomExpression parse(String inputString) {
-//        System.out.println("Input: " + inputString);
-        parse(new StringSource(inputString));
-        final CustomExpression result = parseLevel0();
-        if (eof()) {
-//            System.out.println("Correct: " + result.toString());
-            return result;
-        }
-//        System.out.println("Stopped at: " + curChar());
-//        System.out.println("With result: " + result.toString());
-        throw error("End of string expected");
+public final class ExpressionParser extends BaseParser implements TripleParser {
+    public ExpressionParser(CharSource source) {
+        super(source);
+    }
+    public ExpressionParser() {
+        super();
     }
 
-    private CustomExpression parseLevel0() { // clear, set
-        skipWhitespace();
-        CustomExpression left = parseLevel1();
-        skipWhitespace();
-
-        while (test('c') || test('s')) {
-            if (take('c')) {
-                expect("lear");
-                left = new Clear(left, parseLevel1());
-            } else if (take('s')) {
-                expect("et");
-                left = new Set(left, parseLevel1());
-            }
-            skipWhitespace();
-        }
-        return left;
+    @Override
+    public TripleExpression parse(final String expression) {
+        return parse(new StringSource(expression));
     }
-
-    private CustomExpression parseLevel1() { // +, -
-        skipWhitespace();
-        CustomExpression left = parseLevel2();
-        skipWhitespace();
-        while (test('+') || test('-')) {
-            if (take('+')) {
-                left = new Add(left, parseLevel2());
-            } else if (take('-')) {
-                left = new Subtract(left, parseLevel2());
-            }
-            skipWhitespace();
-        }
-        return left;
-    }
-
-    private CustomExpression parseLevel2() { // *, /
-        skipWhitespace();
-        CustomExpression left = parseLevel3();
-        skipWhitespace();
-        while (test('*') || test('/')) {
-            if (take('*')) {
-                left = new Multiply(left, parseLevel3());
-            } else if (take('/')) {
-                left = new Divide(left, parseLevel3());
-            }
-            skipWhitespace();
-        }
-        return left;
-    }
-
-    private CustomExpression parseLevel3() { // -, const, var, count, (, )
-        skipWhitespace();
-        if (take('(')) {
-            CustomExpression res = parseLevel0();
-            expect(')');
-            return res;
-        }
-        if (take('-')) {
-            if (!between('0', '9')) {
-                CustomExpression res = parseLevel3();
-                return new UnMinus(res);
-            }
-            back();
-        }
-        if (take('c')) {
-            expect("ount");
-            CustomExpression res = parseLevel3();
-            return new Count(res);
-        }
-        if (take('x')) {
-            return new Variable("x");
-        }
-        if (take('y')) {
-            return new Variable("y");
-        }
-        if (take('z')) {
-            return new Variable("z");
-        }
-        final StringBuilder sb = new StringBuilder();
-        takeInteger(sb);
-        skipWhitespace();
-        return new Const(Integer.parseInt(sb.toString()));
-    }
-
-    private void takeDigits(final StringBuilder sb) {
-        while (between('0', '9')) {
-            sb.append(take());
-        }
-    }
-
-    private void takeInteger(final StringBuilder sb) {
-        if (take('-')) {
-            sb.append('-');
-        }
-        if (take('0')) {
-            sb.append('0');
-        } else if (between('1', '9')) {
-            takeDigits(sb);
-        } else {
-            throw error("Invalid number");
-        }
+    public TripleExpression parse(final CharSource source) {
+        return new ExpressionParser(source).parseBinaryOperation(null, 4);
     }
 
     private void skipWhitespace() {
-        while (Character.isWhitespace(curChar())) {
+        while(Character.isWhitespace(getCh())) {
             take();
         }
+    }
+    private Operand parseBinaryOperation(Operand rightOperand, int priority) {
+        skipWhitespace();
+        String tag = rightOperand != null ? getTag(priority) : "";
+        skipWhitespace();
+        Operand leftOperand = switch (priority) {
+            case 4, 3 -> parseBinaryOperation(null, priority - 1);
+            case 2 -> {
+                if (rightOperand == null || !tag.isEmpty()) {
+                    yield parseUnaryOperation();
+                } else {
+                    yield null;
+                }
+            }
+            default -> null;
+        };
+        if (rightOperand == null && leftOperand != null) {
+            return parseBinaryOperation(leftOperand, priority);
+        } else {
+            switch (priority) {
+                case 4 -> {
+                    if (tag.equals("set")) {
+                        return parseBinaryOperation(new Set(rightOperand, leftOperand), 4);
+                    }
+                    if (tag.equals("clear")) {
+                        return parseBinaryOperation(new Clear(rightOperand, leftOperand), 4);
+                    }
+                    take();
+                    return rightOperand;
+                }
+                case 3 -> {
+                    if (tag.equals("+")) {
+                        return parseBinaryOperation(new Add(rightOperand, leftOperand), 3);
+                    }
+                    if (tag.equals("-")) {
+                        return parseBinaryOperation(new Subtract(rightOperand, leftOperand), 3);
+                    }
+                    return rightOperand;
+                }
+                case 2 -> {
+                    if (tag.equals("*")) {
+                        return parseBinaryOperation(new Multiply(rightOperand, leftOperand), 2);
+                    }
+                    if (tag.equals("/")) {
+                        return parseBinaryOperation(new Divide(rightOperand, leftOperand), 2);
+                    }
+                    return rightOperand;
+                }
+            }
+        }
+        return null;
+    }
+
+    String getTag(int priority) {
+        return switch (priority) {
+            case 4 -> buildToken();
+            case 3 -> {
+                if (test('-') || test('+')) {
+                    yield Character.toString(take());
+                } else {
+                    yield "";
+                }
+            }
+            case 2 -> {
+                if (test('/') || test('*')) {
+                    yield Character.toString(take());
+                } else {
+                    yield "";
+                }
+            }
+            default -> "";
+        };
+    }
+    private Operand parseUnaryOperation() {
+        skipWhitespace();
+        char minus = test('-') ? take() : '\0';
+        if (between('0', '9')) {
+            StringBuilder sb = minus == '-' ? new StringBuilder().append('-') : new StringBuilder();
+            while (between('0', '9')) {
+                sb.append(take());
+            }
+            return new Const(Integer.parseInt(sb.toString()));
+        }
+        if (minus == '-') {
+            return new Negate(parseUnaryOperation());
+        }
+        if (take('(')) {
+            return parseBinaryOperation(null, 4);
+        }
+        String tag = buildToken();
+        if (tag.equals("count")) {
+            return new Count(parseUnaryOperation());
+        }
+        if (tag.equals("x") || tag.equals("y") || tag.equals("z")) {
+            return new Variable(tag);
+        }
+        takePrev(tag.length());
+        return null;
     }
 }
